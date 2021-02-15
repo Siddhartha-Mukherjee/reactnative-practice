@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-const Login = () => {
+const Login = ({navigation}) => {
 
    const [userInfo, setUserInfo] = useState({
         userEmail: null,
@@ -57,7 +57,7 @@ const Login = () => {
     }
 
     const loginHandle = () => {
-        
+
         if ( !userInfo.userEmail || !userInfo.password ) {
             Alert.alert('Wrong Input!', 'Email or password field cannot be empty.', [
                 {text: 'Okay'}
@@ -110,6 +110,11 @@ const Login = () => {
                         />
                     </View>
             </View>
+
+            <TouchableOpacity>
+                <Text style={styles.forgotPassword}> Forgot Password ? </Text>
+            </TouchableOpacity>
+
             <View style={styles.loginButton}>
                 <TouchableOpacity
                         style={styles.signIn}
@@ -123,6 +128,15 @@ const Login = () => {
                             color:'#fff'
                         }]}>Sign In</Text>
                     </LinearGradient>
+                </TouchableOpacity>
+            </View>
+            <View>
+                <TouchableOpacity
+                onPress={() => navigation.navigate('Registration')}
+                >
+                    <Text style={styles.registrationHere}>
+                        New user ? Registration here.
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -169,7 +183,7 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     loginButton: {
-        marginTop: 40,
+        marginTop: 30,
         marginRight: 20,
         marginLeft: 20
     },
@@ -184,5 +198,14 @@ const styles = StyleSheet.create({
     signInIcon:{ 
         marginLeft: 5,
         marginRight: 5
+    },
+    forgotPassword: {
+        marginTop: 15,
+        marginLeft: 180
+        
+    },
+    registrationHere: {
+        marginLeft: 30,
+        color: '#ffffff'
     }
 })

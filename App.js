@@ -3,6 +3,12 @@ import { StyleSheet, View  } from 'react-native';
 
 import BottomTab from './component/tabs';
 import Login from './component/login';
+import Registration from './component/registration';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 export default function App() {
 
@@ -10,7 +16,20 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      { !isLogin? <Login/> : <BottomTab/>}
+      { !isLogin? 
+      
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login" 
+          screenOptions={{
+            headerShown: false
+          }} 
+        >
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Registration" component={Registration} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    
+      : <BottomTab/>}
     </View>
   );
 
