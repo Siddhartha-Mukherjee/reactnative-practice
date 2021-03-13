@@ -1,14 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-// import { TextInput } from 'react-native-gesture-handler';
 import { RadioButton } from 'react-native-paper';
 
+import * as Animatable from 'react-native-animatable';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
 
 const Registration = ({navigation}) => {
-    const [checked, setChecked] = React.useState('first');
+    const [checked, setChecked] = React.useState('male');
+
+    const [ userInfo, setUserInfo ] = useState({
+        firstName: null,
+        validFirstName: true,
+        lastName: null,
+        validLastName: true,
+        email: null,
+        validEmail: true,
+        password: null,
+        validPassword: true,
+        gender: 'male',
+        address: null,
+        validAddress: true
+    })
+
+    const userRegistration = () => {
+
+        if (!userInfo.firstName || !userInfo.lastName || !userInfo.email | !userInfo.password || !userInfo.address) {
+            setUserInfo({
+                ...userInfo,
+                validFirstName: userInfo.firstName? true : false,
+                validLastName: userInfo.lastName? true : false,
+                validEmail: userInfo.email? true : false,
+                validPassword: userInfo.password? true : false,
+                validAddress: userInfo.address? true : false
+            })
+        } else {
+            console.log(userInfo)
+        }
+    }
+
+    const setText = (res, type) => {
+        console.log(res, type)
+
+        switch(type) {
+
+            case 'firstName':
+                setUserInfo({
+                    ...userInfo,
+                    firstName: res,
+                    validFirstName: true
+                })
+                break;
+
+            case 'lastName':
+                setUserInfo({
+                    ...userInfo,
+                    lastName: res,
+                    validLastName: true
+                })
+                break;
+
+            case 'email':
+                setUserInfo({
+                    ...userInfo,
+                    email: res,
+                    validEmail: true
+                })
+                break;
+
+            case 'password':
+                setUserInfo({
+                    ...userInfo,
+                    password: res,
+                    validPassword: true
+                })
+                break;
+
+            case 'address':
+                setUserInfo({
+                    ...userInfo,
+                    address: res,
+                    validAddress: true
+                })
+                break;
+
+        }
+    }
 
     return(
         <View style={styles.reg}>
@@ -20,21 +98,53 @@ const Registration = ({navigation}) => {
                 <TextInput 
                     placeholder="Enter your First name"
                     style={styles.regField}
+                    onChangeText={ (res) => {setText(res, 'firstName')} }
                 />
+                { userInfo.validFirstName ? null : 
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter your first name</Text>
+                    </Animatable.View>
+                }
             </View>
             <View style={styles.field} >
                 <Text style={styles.regFieldName}> Last Name </Text>
                 <TextInput 
                     placeholder="Enter your last name"
                     style={styles.regField}
+                    onChangeText = { (res) => setText(res, 'lastName') }
                 />
+                { userInfo.validLastName ? null : 
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter your last name</Text>
+                    </Animatable.View>
+                }
             </View>
             <View style={styles.field} >
                 <Text style={styles.regFieldName}> Email </Text>
                 <TextInput 
                     placeholder="Enter your Email"
                     style={styles.regField}
+                    onChangeText = { (res) => setText(res, 'email') }
                 />
+                { userInfo.validEmail ? null : 
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter your email</Text>
+                    </Animatable.View>
+                }
+            </View>
+
+            <View style={styles.field} >
+                <Text style={styles.regFieldName}> Password </Text>
+                <TextInput 
+                    placeholder="Enter your Password"
+                    style={styles.regField}
+                    onChangeText = { (res) => setText(res, 'password') }
+                />
+                { userInfo.validPassword ? null : 
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter your password</Text>
+                    </Animatable.View>
+                }
             </View>
            
             <View style={styles.fieldRadio}>
@@ -42,19 +152,19 @@ const Registration = ({navigation}) => {
                 <View style={styles.genderRadio}>
                    <View style={styles.radioGender} >
                         <RadioButton
-                            value="first"
-                            status={ checked === 'first' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('first')}
+                            value="male"
+                            status={ checked === 'male' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('male')}
                             style={styles.resRadio}
                         />
-                        <Text style={styles.genderText}> Mail </Text>
+                        <Text style={styles.genderText}> Male </Text>
                    </View>
 
                     <View style={styles.radioGender} > 
                         <RadioButton
-                            value="second"
-                            status={ checked === 'second' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('second')}
+                            value="female"
+                            status={ checked === 'female' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('female')}
                             style={styles.resRadio}
                         />
                         <Text style={styles.genderText}> Female </Text>
@@ -70,13 +180,19 @@ const Registration = ({navigation}) => {
                     style={styles.regField}
                     multiline={true}
                     numberOfLines={3}
+                    onChangeText = { (res) => setText(res, 'address') }
                 />
+                { userInfo.validAddress ? null : 
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter your address</Text>
+                    </Animatable.View>
+                }
             </View>
 
             <View style={styles.regButton}>
                 <TouchableOpacity
                         style={styles.signUp}
-                        onPress={() => {}}
+                        onPress={() => {userRegistration()}}
                     >
                     <LinearGradient
                         colors={['rgba(0,0,0,0.8)', 'transparent']}
@@ -88,7 +204,7 @@ const Registration = ({navigation}) => {
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
-            <View>
+            <View style={styles.loginPage}>
                 <TouchableOpacity
                 onPress={() => navigation.navigate('Login')}
                 >
@@ -131,6 +247,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         backgroundColor: '#ffffff',
         paddingHorizontal: 10,
+        borderRadius: 20
     },
     fieldRadio: {
         paddingTop: 20,
@@ -152,7 +269,7 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     regButton: {
-        marginTop: 30,
+        marginTop: 10,
         marginRight: 20,
         marginLeft: 20,
         // marginVertical: 20
@@ -168,5 +285,14 @@ const styles = StyleSheet.create({
     loginHere: {
         marginLeft: 30,
         color: '#ffffff'
-    }
+    },
+    loginPage: {
+        paddingBottom: 20
+    },
+    errorMsg: {
+        color: '#FF0000',
+        fontSize: 14,
+        paddingLeft: 15,
+        paddingTop: 5,
+    },
 })

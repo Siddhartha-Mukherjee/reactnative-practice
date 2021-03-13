@@ -4,19 +4,20 @@ import { View, Text, StyleSheet,
 
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import * as Animatable from 'react-native-animatable';
 
 const Login = ({navigation}) => {
 
    const [userInfo, setUserInfo] = useState({
         userEmail: null,
-        password: null,
+        userPassword: null,
         check_textInputChange: false,
         secureTextEntry: true,
         isValidUser: true,
         isValidPassword: true,
    });
 
+   const [isValidate, setValidate] = useState(false);
 
     const textInputEmail = (res) => {
 
@@ -49,7 +50,7 @@ const Login = ({navigation}) => {
         } else {
             setUserInfo({
                 ...userInfo,
-                password: res,
+                userPassword: res,
                 isValidPassword: false
             });
         }
@@ -58,15 +59,14 @@ const Login = ({navigation}) => {
 
     const loginHandle = () => {
 
-        if ( !userInfo.userEmail || !userInfo.password ) {
-            Alert.alert('Wrong Input!', 'Email or password field cannot be empty.', [
-                {text: 'Okay'}
-            ]);
-            return;
-        
+        if (!userInfo.userEmail || !userInfo.userPassword) {
+            setUserInfo({
+                ...userInfo,
+                isValidUser: userInfo.userEmail? true : false,
+                isValidPassword: userInfo.userPassword? true : false
+            })
         } else {
-
-            console.log(userInfo);
+            console.log('Login Success');
         }
 
         
@@ -80,35 +80,54 @@ const Login = ({navigation}) => {
                 </Text>
             </View>
             <View style={styles.loginField}>
-                    <View style={styles.loginFieldEmail}>
-                        <Text style={styles.loginFieldText}>
-                        <Icon
-                        name="user-o"
-                        size={17}
-                        color="white"
-                        style={styles.signInIcon}
-                        />
-                        Email </Text>
-                        <TextInput  style={styles.loginInputField}
-                            placeholder="Enter your email"
-                            onChangeText={ (res) => textInputEmail(res) }
-                        />
-                    </View>
-                    <View style={styles.loginFieldPassword}>
-                        <Text style={styles.loginFieldText}> 
-                        <Icon
-                        name="lock"
-                        size={17}
-                        color="white"
-                        style={styles.signInIcon}
-                        />
-                         Password </Text>
-                        <TextInput style={styles.loginInputField}
-                            placeholder="Enter your password"
-                            secureTextEntry={userInfo.secureTextEntry ? true : false}
-                            onChangeText={ (res) => textInputPassword(res) }
-                        />
-                    </View>
+
+                <View style={styles.loginFieldEmail}>
+                    <Text style={styles.loginFieldText}>
+                    <Icon
+                    name="user-o"
+                    size={17}
+                    color="white"
+                    style={styles.signInIcon}
+                    />
+                    Email </Text>
+                    <TextInput  style={styles.loginInputField}
+                        placeholder="Enter your email"
+                        onChangeText={ (res) => textInputEmail(res) }
+                    />
+
+                    { userInfo.isValidUser? null: 
+                    
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Please enter your email</Text>
+                        </Animatable.View>
+                    }
+
+                  
+                </View>
+
+                <View style={styles.loginFieldPassword}>
+                    <Text style={styles.loginFieldText}> 
+                    <Icon
+                    name="lock"
+                    size={17}
+                    color="white"
+                    style={styles.signInIcon}
+                    />
+                        Password </Text>
+                    <TextInput style={styles.loginInputField}
+                        placeholder="Enter your password"
+                        secureTextEntry={userInfo.secureTextEntry ? true : false}
+                        onChangeText={ (res) => textInputPassword(res) }
+                    />
+                { userInfo.isValidPassword? null : 
+                
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter your password</Text>
+                    </Animatable.View>
+                }
+
+                </View>
+
             </View>
 
             <TouchableOpacity>
@@ -182,6 +201,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         marginRight: 20,
         paddingHorizontal: 10,
+        borderRadius: 20
     },
     loginButton: {
         marginTop: 30,
@@ -208,5 +228,11 @@ const styles = StyleSheet.create({
     registrationHere: {
         marginLeft: 30,
         color: '#ffffff'
-    }
+    },
+    errorMsg: {
+        color: '#FF0000',
+        fontSize: 14,
+        paddingLeft: 25,
+        paddingTop: 5,
+    },
 })
