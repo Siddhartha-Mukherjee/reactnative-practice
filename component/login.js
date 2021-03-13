@@ -6,18 +6,22 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 
+import { AuthContext } from './auth/authContext';
+
 const Login = ({navigation}) => {
 
-   const [userInfo, setUserInfo] = useState({
-        userEmail: null,
-        userPassword: null,
-        check_textInputChange: false,
-        secureTextEntry: true,
-        isValidUser: true,
-        isValidPassword: true,
-   });
+    const { signIn } = React.useContext(AuthContext);
 
-   const [isValidate, setValidate] = useState(false);
+    const [userInfo, setUserInfo] = useState({
+            userEmail: null,
+            userPassword: null,
+            check_textInputChange: false,
+            secureTextEntry: true,
+            isValidUser: true,
+            isValidPassword: true,
+    });
+
+    const [isValidate, setValidate] = useState(false);
 
     const textInputEmail = (res) => {
 
@@ -66,7 +70,16 @@ const Login = ({navigation}) => {
                 isValidPassword: userInfo.userPassword? true : false
             })
         } else {
-            console.log('Login Success');
+
+            const user = {
+                id: 1, 
+                email: 'user1@email.com',
+                username: 'user1', 
+                password: 'password', 
+                userToken: 'token123'
+            }
+
+            signIn(user);
         }
 
         
@@ -151,7 +164,7 @@ const Login = ({navigation}) => {
             </View>
             <View>
                 <TouchableOpacity
-                onPress={() => navigation.navigate('Registration')}
+                onPress={() => navigation.navigate('Home')}
                 >
                     <Text style={styles.registrationHere}>
                         New user ? Registration here.
